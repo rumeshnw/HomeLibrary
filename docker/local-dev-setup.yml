@@ -1,0 +1,23 @@
+version: '3.3'
+
+services:
+  db:
+    image: mysql:8.4
+    container_name: mysql8-container
+    environment:
+      MYSQL_ROOT_PASSWORD: 'mysqlR00tUs3r'
+      MYSQL_DATABASE: 'home_library'
+      MYSQL_USER: 'rumeshDev'
+      MYSQL_PASSWORD: 'rumesh@dev.au'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - mysql_network
+
+volumes:
+  mysql_data:
+
+networks:
+  mysql_network:

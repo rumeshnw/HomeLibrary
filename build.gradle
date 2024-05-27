@@ -1,0 +1,52 @@
+plugins {
+	id 'java'
+	id 'groovy'
+	id 'org.springframework.boot' version '3.2.6'
+	id 'io.spring.dependency-management' version '1.1.4'
+    id 'nu.studer.jooq' version '8.2'
+}
+
+group = 'dev.rumesh'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '21'
+	targetCompatibility = '21'
+}
+
+ext {
+
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-jooq'
+	implementation 'mysql:mysql-connector-java:8.0.33'
+
+	compileOnly 'org.projectlombok:lombok'
+
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.codehaus.groovy:groovy'
+    testImplementation 'org.spockframework:spock-core:2.3-groovy-3.0'
+    testImplementation 'org.spockframework:spock-spring:2.3-groovy-3.0'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
