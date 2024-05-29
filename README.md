@@ -1,3 +1,3 @@
 # Home Library
 
-This is a Simple App to Maintain My Digital Library(Movies, TV Shows, Music)
+This is a Simple App to Maintain Book Library
