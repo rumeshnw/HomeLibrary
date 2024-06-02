@@ -32,6 +32,14 @@ configurations {
 	}
 }
 
+sourceSets {
+	main {
+		java {
+			srcDir "${project.buildDir}/generated/sources/annotationProcessor/java/main"
+		}
+	}
+}
+
 repositories {
 	mavenCentral()
 }
@@ -49,11 +57,11 @@ dependencies {
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
+ 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.codehaus.groovy:groovy'
     testImplementation "org.spockframework:spock-core:${spockVersion}"
     testImplementation "org.spockframework:spock-spring:${spockVersion}"
 
@@ -62,6 +70,10 @@ dependencies {
 	liquibaseRuntime "info.picocli:picocli:${picocliVersion}"
 	liquibaseRuntime "ch.qos.logback:logback-core:${logbackVersion}"
 	liquibaseRuntime "ch.qos.logback:logback-classic:${logbackVersion}"
+}
+
+tasks.withType(JavaCompile) {
+    options.annotationProcessorPath = configurations.annotationProcessor
 }
 
 tasks.named('test') {
