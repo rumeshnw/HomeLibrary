@@ -20,10 +20,11 @@ ext {
 	lombokMapstructBindingVersion = '0.2.0'
 	mapStructVersion = '1.5.5.Final'
 	liquibaseVersion = '4.28.0'
-	spockVersion = '2.3-groovy-4.0'
+	spockVersion = '2.4-M4-groovy-4.0'
 	mysqlConnectorVersion = '8.0.33'
 	logbackVersion = '1.5.6'
-	picocliVersion = "4.7.6"
+	picocliVersion = '4.7.6'
+	groovyVersion = '4.0.21'
 }
 
 configurations {
@@ -36,6 +37,11 @@ sourceSets {
 	main {
 		java {
 			srcDir "${project.buildDir}/generated/sources/annotationProcessor/java/main"
+		}
+	}
+	test {
+		groovy {
+			srcDir "src/test/groovy"
 		}
 	}
 }
@@ -64,6 +70,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.spockframework:spock-core:${spockVersion}"
     testImplementation "org.spockframework:spock-spring:${spockVersion}"
+	testImplementation "org.apache.groovy:groovy:${groovyVersion}"
 
 	liquibaseRuntime "mysql:mysql-connector-java:${mysqlConnectorVersion}"
 	liquibaseRuntime "org.liquibase:liquibase-core:${liquibaseVersion}"
@@ -72,11 +79,11 @@ dependencies {
 	liquibaseRuntime "ch.qos.logback:logback-classic:${logbackVersion}"
 }
 
-tasks.withType(JavaCompile) {
-    options.annotationProcessorPath = configurations.annotationProcessor
+tasks.withType(JavaCompile).configureEach {
+	options.annotationProcessorPath = configurations.annotationProcessor
 }
 
-tasks.named('test') {
+tasks.withType(Test).configureEach {
 	useJUnitPlatform()
 }
 
