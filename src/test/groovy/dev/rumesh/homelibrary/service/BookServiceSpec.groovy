@@ -1,5 +1,6 @@
 package dev.rumesh.homelibrary.service
 
+import dev.rumesh.homelibrary.TestPropertyUtils
 import dev.rumesh.homelibrary.domain.Book
 import dev.rumesh.homelibrary.repository.BookRepository
 import jakarta.transaction.Transactional
@@ -12,7 +13,7 @@ import java.time.LocalDate
 
 @SpringBootTest
 @Transactional
-@TestPropertySource(locations = "classpath:application-test.properties")
+@TestPropertySource(locations = TestPropertyUtils.TEST_PROPERTIES_LOCATION)
 class BookServiceSpec extends Specification {
 
     @Autowired

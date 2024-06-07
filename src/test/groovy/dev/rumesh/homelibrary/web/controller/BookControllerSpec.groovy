@@ -1,5 +1,6 @@
 package dev.rumesh.homelibrary.web.controller
 
+import dev.rumesh.homelibrary.TestPropertyUtils
 import dev.rumesh.homelibrary.domain.Book
 import dev.rumesh.homelibrary.repository.BookRepository
 import jakarta.transaction.Transactional
@@ -17,7 +18,7 @@ import java.time.LocalDate
 @AutoConfigureMockMvc
 @SpringBootTest
 @Transactional
-@TestPropertySource(locations = "classpath:application-test.properties")
+@TestPropertySource(locations = TestPropertyUtils.TEST_PROPERTIES_LOCATION)
 class BookControllerSpec extends Specification {
 
     @Autowired
