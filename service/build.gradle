@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+    id 'groovy'
+}
+
+dependencies {
+    implementation project(':domain')
+    implementation project(':repository')
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "mysql:mysql-connector-java:${mysqlConnectorVersion}"
+    testImplementation "org.liquibase:liquibase-core:${liquibaseVersion}"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+bootRun {
+    enabled = false
+}

@@ -1,91 +1,103 @@
 plugins {
-	id 'java'
-	id 'groovy'
-	id 'org.springframework.boot' version '3.2.6'
-	id 'io.spring.dependency-management' version '1.1.4'
-    id 'nu.studer.jooq' version '9.0'
-	id 'org.liquibase.gradle' version '2.2.2'
+    id 'java'
+    id 'groovy'
+    id 'org.springframework.boot' version '3.2.6'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.liquibase.gradle' version '2.2.2'
 }
 
-group = 'dev.rumesh'
-version = '0.0.1-SNAPSHOT'
+allprojects {
+    group = 'dev.rumesh'
+    version = '0.0.1-SNAPSHOT'
 
-java {
-	sourceCompatibility = '21'
-	targetCompatibility = '21'
-}
-
-ext {
-	lombokVersion = '1.18.32'
-	lombokMapstructBindingVersion = '0.2.0'
-	mapStructVersion = '1.5.5.Final'
-	liquibaseVersion = '4.28.0'
-	spockVersion = '2.4-M4-groovy-4.0'
-	mysqlConnectorVersion = '8.0.33'
-	logbackVersion = '1.5.6'
-	picocliVersion = '4.7.6'
-	groovyVersion = '4.0.21'
+    repositories {
+        mavenCentral()
+    }
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 sourceSets {
-	main {
-		java {
-			srcDir "${project.buildDir}/generated/sources/annotationProcessor/java/main"
-		}
-	}
-	test {
-		groovy {
-			srcDir "src/test/groovy"
-		}
-	}
+    main {
+        java {
+            srcDir "${project.buildDir}/generated/sources/annotationProcessor/java/main"
+        }
+    }
+    test {
+        groovy {
+            srcDir "src/test/groovy"
+        }
+    }
 }
 
-repositories {
-	mavenCentral()
+ext {
+    lombokVersion = '1.18.32'
+    lombokMapstructBindingVersion = '0.2.0'
+    mapStructVersion = '1.5.5.Final'
+    liquibaseVersion = '4.28.0'
+    spockVersion = '2.4-M4-groovy-4.0'
+    mysqlConnectorVersion = '8.0.33'
+    logbackVersion = '1.5.6'
+    picocliVersion = '4.7.6'
+    groovyVersion = '4.0.21'
+    jakartaPersistenceVersion = '3.2.0'
+}
+
+subprojects {
+    sourceCompatibility = '21'
+    targetCompatibility = '21'
+
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'idea'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    sourceSets {
+        test {
+            resources.srcDirs = ['src/test/resources']
+        }
+    }
+
+    dependencies {
+        compileOnly "org.projectlombok:lombok:${lombokVersion}"
+
+        annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+        testImplementation "org.liquibase:liquibase-core:${liquibaseVersion}"
+        annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+        annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
+
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation "org.spockframework:spock-core:${spockVersion}"
+        testImplementation "org.spockframework:spock-spring:${spockVersion}"
+        testImplementation "org.apache.groovy:groovy:${groovyVersion}"
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.annotationProcessorPath = configurations.annotationProcessor
+    }
+
+    tasks.withType(Test).configureEach {
+        useJUnitPlatform()
+    }
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation "mysql:mysql-connector-java:${mysqlConnectorVersion}"
-	implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
-	implementation "org.mapstruct:mapstruct:${mapStructVersion}"
-	implementation "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
-
-
-	compileOnly "org.projectlombok:lombok:${lombokVersion}"
-
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
- 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-	annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
-
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation "org.spockframework:spock-core:${spockVersion}"
-    testImplementation "org.spockframework:spock-spring:${spockVersion}"
-	testImplementation "org.apache.groovy:groovy:${groovyVersion}"
-
-	liquibaseRuntime "mysql:mysql-connector-java:${mysqlConnectorVersion}"
-	liquibaseRuntime "org.liquibase:liquibase-core:${liquibaseVersion}"
-	liquibaseRuntime "info.picocli:picocli:${picocliVersion}"
-	liquibaseRuntime "ch.qos.logback:logback-core:${logbackVersion}"
-	liquibaseRuntime "ch.qos.logback:logback-classic:${logbackVersion}"
+    liquibaseRuntime "mysql:mysql-connector-java:${mysqlConnectorVersion}"
+    liquibaseRuntime "org.liquibase:liquibase-core:${liquibaseVersion}"
+    liquibaseRuntime "info.picocli:picocli:${picocliVersion}"
+    liquibaseRuntime "ch.qos.logback:logback-core:${logbackVersion}"
+    liquibaseRuntime "ch.qos.logback:logback-classic:${logbackVersion}"
 }
 
-tasks.withType(JavaCompile).configureEach {
-	options.annotationProcessorPath = configurations.annotationProcessor
-}
-
-tasks.withType(Test).configureEach {
-	useJUnitPlatform()
-}
 
 def dbUrl = System.getenv('DB_URL')
 def dbUsername = System.getenv('DB_USERNAME')
@@ -94,7 +106,7 @@ def dbPassword = System.getenv('DB_PASSWORD')
 liquibase {
     activities {
         main {
-            changelogFile './src/main/resources/db/changelog/db.changelog-master.xml'
+            changelogFile './repository/src/main/resources/db/changelog/db.changelog-master.xml'
             url "${dbUrl}"
             username "${dbUsername}"
             password "${dbPassword}"
@@ -105,5 +117,5 @@ liquibase {
 }
 
 springBoot {
-	mainClass = 'dev.rumesh.homelibrary.HomelibraryApplication'
+    mainClass = 'dev.rumesh.homelibrary.HomelibraryApplication'
 }
