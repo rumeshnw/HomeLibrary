@@ -21,6 +21,8 @@ dependencies {
 
     runtimeOnly "mysql:mysql-connector-java:${mysqlConnectorVersion}"
 
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
     testRuntimeOnly "org.liquibase:liquibase-core:${liquibaseVersion}"
     testRuntimeOnly 'org.springframework:spring-jdbc'
 }
